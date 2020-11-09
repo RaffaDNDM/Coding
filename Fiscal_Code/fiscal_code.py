@@ -20,14 +20,13 @@ def button_compute():
     last_name.insert(tk.END, 'Rossi')
     first_name.grid(row=0, column=1, padx=10, pady=10)
     last_name.grid(row=1, column=1, padx=10, pady=10)
-    sex = tk.IntVar()
+    sex = tk.IntVar(window_compute)
     sex.set(1)
     tk.Label(frame1, text="sesso", bg=FRAME_BGs[0]).grid(row=2)
     male = tk.Radiobutton(frame1, text = "uomo", variable = sex, value = 1, bg=FRAME_BGs[0])
-    male.grid(row=2, column=1, padx=2, pady=10)
+    male.grid(row=2, column=1)
     female = tk.Radiobutton(frame1, text = "donna", variable = sex, value = 2, bg=FRAME_BGs[0])
-    female.grid(row=2, column=2, padx=2, pady=10)
-
+    female.grid(row=2, column=2)
 
     frame2 = tk.Frame(master=window_compute, width=300, height=100, bg=FRAME_BGs[1])
     frame2.pack(fill=tk.BOTH, side=tk.TOP, expand=True)
@@ -79,6 +78,7 @@ def button_reading():
 
 
 def compute_pressed():
+    print(sex.get())
     compute_code(first_name.get(),last_name.get(),sex.get(),day.get(),month.get(),year.get(),city.get())
 
 def read_pressed():
