@@ -1,0 +1,43 @@
+MONTHS = {'Gennaio':'A',
+          'Febbraio':'B',
+          'Marzo':'C', 
+          'Aprile':'D', 
+          'Maggio':'E', 
+          'Giugno':'H', 
+          'Luglio':'L', 
+          'Agosto':'M', 
+          'Settembre':'P', 
+          'Ottobre':'R', 
+          'Novembre':'S', 
+          'Dicembre':'T'}
+
+ODD_CODES = {'A':1,
+             'B':0,
+             'C':5,
+             'D':7,
+             'E':9,
+             'F':13,
+             'G':15,
+             'H':17,
+             'I':19,
+             'J':21,
+             'K':2,
+             'L':4,
+             'M':18,
+             'N':20, 
+             'O':11,
+             'P':3,
+             'Q':6,
+             'R':8,
+             'S':12,
+             'T':14,
+             'U':16,
+             'V':10,
+             'W':22,
+             'X':25,
+             'Y':24,
+             'Z':23}
+             
+FEMALE_OFFSET = 40
+VOWELS = ['A','E','I','O','U']
+SEX_STRINGS = {1:'uomo', 2:'donna'}
