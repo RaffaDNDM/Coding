@@ -76,7 +76,9 @@ def args_parser():
 
     return args.dir, args.recursive, args.format
 
-
+'''
+Convertion of images in path with extension img_format
+'''
 def convertion(path, recursive, img_format):
 
     if recursive:
@@ -109,6 +111,9 @@ def convertion(path, recursive, img_format):
             create_pdf(path, '', files)
         
 
+'''
+Main function.
+'''
 def main():
     #Argument parser
     path, recursive, img_format = args_parser()
