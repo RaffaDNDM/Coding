@@ -1,7 +1,5 @@
 import sys
 import os
-import gzip
-import shutil
 import argparse
 import zipfile
 import progressbar
