@@ -57,8 +57,14 @@ def zip_extraction(input_path, output_path, files, arch_format):
             os.mkdir(output_subfolder)
         #Archieve from its name
         archieve = zipfile.ZipFile(input_path+'/'+f)
-        #Extract all files in the archieve in output path
-        archieve.extractall(output_subfolder)
+
+        try:
+            #Extract all files in the archieve in output path
+            archieve.extractall(output_subfolder)
+        except (zipfile.BadZipFile, UnicodeDecodeError):
+            #Corrupted zip archieve or there is some corrupted file in it
+            continue
+
         #Close the archieve
         archieve.close()
         #Completed extraction
