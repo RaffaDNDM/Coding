@@ -2,7 +2,7 @@
 This program extract all the archieves in the input folder with a specific format, writing the results in the output folder.<br>
 It requires several dependencies, that you can install using this bash command:
 ```bash
-pip3 install argparse zipfile progressbar termcolor
+pip3 install argparse zipfile py7zr progressbar termcolor
 ```
 To run the program, you need to type for example this command on bash:
 ```bash

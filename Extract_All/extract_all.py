@@ -4,9 +4,9 @@ import argparse
 import zipfile
 import gzip
 import tarfile
+import py7zr
 import progressbar
 from termcolor import cprint
-
 
 '''
 Parser of command line arguments
@@ -37,6 +37,9 @@ def args_parser():
     return args.input, output
 
 
+'''
+Extract an archieve looking to its extension
+'''
 def extract_file(input_filename, output_filename):
     #Archieve from its name
     if input_filename.endswith('.zip'):
@@ -46,7 +49,11 @@ def extract_file(input_filename, output_filename):
                 archieve.extractall(output_filename)
             except (zipfile.BadZipFile, UnicodeDecodeError):
                 return
-    
+
+    elif input_filename.endswith('.7z'):
+        with py7zr.SevenZipFile(input_filename, mode='r') as archieve:
+            archieve.extractall(path=output_filename)
+
     elif input_filename.endswith('.tar'):
         with tarfile.open(input_filename, 'r') as archieve:
             archieve.extractall(output_filename)
@@ -100,8 +107,7 @@ def extract_from_dir(input_path, output_path, files):
 
 
 '''
-Extraction of archieves with arch_format extension in 
-input_path to output_path 
+Extraction of archieves with in input_path to output_path 
 '''
 def extraction(input_path, output_path):
     files = [x for x in os.listdir(input_path) if os.path.isfile(input_path+'/'+x)]
