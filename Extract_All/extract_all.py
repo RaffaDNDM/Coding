@@ -2,27 +2,28 @@ import sys
 import os
 import argparse
 import zipfile
+import gzip
+import tarfile
 import progressbar
 from termcolor import cprint
+
 
 '''
 Parser of command line arguments
 '''
 def args_parser():
-
     #Parser of command line arguments
     parser = argparse.ArgumentParser()
     
     #Initialization of needed arguments
     parser.add_argument("-input", "-i", dest="input", help="Path the contains all the archieves to be extracted")
-    parser.add_argument("-format", "-f", dest="format", help="Compression format (zip, rar, 7z, jar or tar)")
     parser.add_argument("-output", "-o", dest="output", help="Path the will contain extracted folders (by default input path)")
 
     #Parse command line arguments
     args = parser.parse_args()
     
     #Check if the arguments have been specified on command line
-    if not args.input or not os.path.isdir(args.input) or not args.format:
+    if not args.input or not os.path.isdir(args.input):
         parser.print_help()
         exit(0)
 
@@ -33,13 +34,45 @@ def args_parser():
     else:
         output = args.input
 
-    return args.input, output, args.format
+    return args.input, output
+
+
+def extract_file(input_filename, output_filename):
+    #Archieve from its name
+    if input_filename.endswith('.zip'):
+        with zipfile.ZipFile(input_filename, 'r') as archieve:
+            try:
+                #Extract all files in the archieve in output path
+                archieve.extractall(output_filename)
+            except (zipfile.BadZipFile, UnicodeDecodeError):
+                return
+    
+    elif input_filename.endswith('.tar'):
+        with tarfile.open(input_filename, 'r') as archieve:
+            archieve.extractall(output_filename)
+
+    elif input_filename.endswith('.tar.gz') or input_filename.endswith('.tgz'):
+        with tarfile.open(input_filename, 'r:gz') as archieve:
+            archieve.extractall(output_filename)
+
+    elif input_filename.endswith('.tar.xz'):
+        with tarfile.open(input_filename, 'r:xz') as archieve:
+            archieve.extractall(output_filename)
+
+    elif input_filename.endswith('.gz') and not input_filename.endswith('.tar.gz'):
+        with open(output_filename, "wb") as out_f, gzip.GzipFile(input_filename) as archieve:
+            out_f.write(archieve.read())
+
+    else:
+        print('Extension for ', end='')
+        cprint('{input_filename}', 'red', end='')
+        print(' unkown')
 
 
 '''
 Extract all archieves in the input path with arch_format extension
 '''
-def zip_extraction(input_path, output_path, files, arch_format):
+def extract_from_dir(input_path, output_path, files):
     count = 0
     #Progress Bar
     bar = progressbar.ProgressBar(maxval=20, \
@@ -49,22 +82,13 @@ def zip_extraction(input_path, output_path, files, arch_format):
     
     for f in files:
         #An output subfolder for each archieve
-        output_subfolder = output_path+'/'+os.path.splitext(f)[0]
+        output_filename = output_path+'/'+os.path.splitext(f)[0]
         #If output subfolder doesn't exist
-        if not os.path.isdir(output_subfolder):
-            os.mkdir(output_subfolder)
-        #Archieve from its name
-        archieve = zipfile.ZipFile(input_path+'/'+f)
+        if not os.path.isdir(output_filename):
+            os.mkdir(output_filename)
+        
+        extract_file(input_path+'/'+f, output_filename)
 
-        try:
-            #Extract all files in the archieve in output path
-            archieve.extractall(output_subfolder)
-        except (zipfile.BadZipFile, UnicodeDecodeError):
-            #Corrupted zip archieve or there is some corrupted file in it
-            continue
-
-        #Close the archieve
-        archieve.close()
         #Completed extraction
         count = count +1
         #Update progress Bar
@@ -72,33 +96,32 @@ def zip_extraction(input_path, output_path, files, arch_format):
 
     bar.finish()
 
+
+
+
 '''
 Extraction of archieves with arch_format extension in 
 input_path to output_path 
 '''
-def extraction(input_path, output_path, arch_format):
-    #Names of archieve files with extension
-    files = [x  for x in os.listdir(input_path) if x.endswith(arch_format)]
+def extraction(input_path, output_path):
+    files = [x for x in os.listdir(input_path) if os.path.isfile(input_path+'/'+x)]
+    
     #No existing files in input_path with extension arch_format
     if not files:
-        print('There are no files with format '+arch_format)
+        print('There are no files in input folder')
         exit(0)
     
-    #Extraction depending on type of compression
-    if arch_format == 'zip':
-        zip_extraction(input_path, output_path, files, arch_format)
-    else:
-        print('Format unknown')
-        exit(0)
+    extract_from_dir(input_path, output_path, files)
+
 
 '''
 Main function.
 '''
 def main():
     #Argument parser
-    input_path, output_path, arch_format = args_parser()
+    input_path, output_path = args_parser()
     #Creation of PDF
-    extraction(input_path, output_path, arch_format)
+    extraction(input_path, output_path)
 
 
 if __name__=='__main__':
