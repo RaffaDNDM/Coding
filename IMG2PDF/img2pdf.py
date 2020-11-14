@@ -62,9 +62,18 @@ def args_parser():
     parser = argparse.ArgumentParser()
     
     #Initialization of needed arguments
-    parser.add_argument("-dir", "-d", dest="dir", help="Path of directory with images or subfolders of images")
-    parser.add_argument("-format", "-f", dest="format", help="Format of images")
-    parser.add_argument("-recursive", "-r", dest="recursive", help="Transformation of images to pdf for each subfolder", action='store_true')
+    parser.add_argument("-dir", "-d", 
+                        dest="dir", 
+                        help="Path of directory with images or subfolders of images")
+    
+    parser.add_argument("-format", "-f", 
+                        dest="format", 
+                        help="Format of images")
+    
+    parser.add_argument("-recursive", "-r", 
+                        dest="recursive", 
+                        help="Transformation of images to pdf for each subfolder", 
+                        action='store_true')
 
     #Parse command line arguments
     args = parser.parse_args()
@@ -75,6 +84,7 @@ def args_parser():
         exit(0)
 
     return args.dir, args.recursive, args.format
+    
 
 '''
 Convertion of images in path with extension img_format
