@@ -6,45 +6,65 @@ from gtts import gTTS
 import tempfile
 import pyglet
 
-def speak(audio_string):
-    tts = gTTS(text=audio_string, lang='en')
-    temp_file = tempfile.gettempdir()+'/temp.mp3'
-    tts.save(temp_file)
-    music = pyglet.media.load(temp_file, streaming=False)
-    music.play()
-    sleep(music.duration)
-    os.remove(temp_file)
-
-def listen():
-    recognizer = sr.Recognizer()
-
-    with sr.Microphone as source:
-        print("What do you need?")
-    
-        not_confirmed = True
-
-        while not_confirmed:
-            request = recognizer.listen(source)
-
-            parsed_request = ''
-            try:
-                parsed_request = recognizer.recognize_google(audio)
-            except sr.UnknownValueError:
-                speak("I can't understand")
-            except sr.RequestError:
-                speak("No request ")
-
-            try:
-
-                if check.upper() == 'YES' or check.upper() == 'NO':
-                    check.upper() == 'YES'
-                else:
-                    speak('Please answer yes or no')
-
-            except sr.UnknownValueError:
-                speak("I can't understand")
-            except sr.RequestError:
-                speak("No request ")
+class VoiceAssistant:
+    def __init__(self, language):
+        self.recognizer = sr.Recognizer()
 
 
-speak('Good morning Sir')
+    def speak(self, audio_string):
+        tts = gTTS(text=audio_string, lang='en')
+        temp_file = tempfile.gettempdir()+'/temp.mp3'
+        tts.save(temp_file)
+        music = pyglet.media.load(temp_file, streaming=False)
+        music.play()
+        sleep(music.duration)
+        os.remove(temp_file)
+
+
+    def listen(self):
+        with sr.Microphone() as source:
+            self.recognizer.adjust_for_ambient_noise(source, duration=5)
+
+            while True:
+                self.speak("Do you need something?")
+                request = self.recognizer.listen(source)
+                parsed_request = ''
+
+                confirmed = False
+                try:
+                    parsed_request = self.recognizer.recognize_google(request)
+                    check = False
+
+                    while not check:
+                        check_string = self.recognizer.listen(source)
+                        parsed_check = self.recognizer.recognize_google(check_string)
+                        self.speak('Do you confirm your request?')
+
+                        if parsed_check == 'yes':
+                            check = True
+                            confirmed = True
+                        elif parsed_check == 'no':
+                            check = True
+                            confirmed = False
+                        else:
+                            self.speak('Please answer yes or no')
+
+                except sr.UnknownValueError:
+                    self.speak("I can't understand")
+                except sr.RequestError:
+                    self.speak("No request ")
+
+                if confirmed:
+                    self.action(parsed_request)
+
+
+    def action(self, request):
+        if request=='t':
+            os.system("x-terminal-emulator -e /bin/zsh")
+
+
+
+while True:
+    assist = VoiceAssistant('en')
+    assist.speak('Good morning Sir')
+    assist.listen()
