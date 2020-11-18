@@ -4,8 +4,7 @@ import argparse
 from termcolor import cprint
 import os
 
-A4_SIZE = (3508, 2480)
-POSITION_TEXT = (100, 100)
+POSITION_TEXT = (50, 20)
 OUTPUT_FILE = 'output.txt'
 
 def uniform_dir_path(directory):
@@ -29,22 +28,23 @@ def uniform_dir_path(directory):
 
 
 def generate_script(text, max_length, input_path, filename, output_path):
-    global A4_SIZE, POSITION_TEXT
+    global POSITION_TEXT
 
-    img = Image.new('RGB', A4_SIZE, color = (255, 255, 255))
-    
+    img = Image.open('dat/parchment.jpg')
+    img2 = img.copy()
+
     string_text = '\n'
     for x in text:
         string_text = string_text + x + '\n'
 
-    fnt = ImageFont.truetype('Allura-Regular.otf', 150)
-    d = ImageDraw.Draw(img)
+    fnt = ImageFont.truetype('dat/styles/Allura-Regular.otf', 40)
+    d = ImageDraw.Draw(img2)
     d.text(POSITION_TEXT, string_text, font=fnt, fill=(0, 0, 0))
     
-    img = img.transpose(Image.FLIP_LEFT_RIGHT)
+    img2 = img2.transpose(Image.FLIP_LEFT_RIGHT)
 
     if filename:
-        img.save(output_path+filename.replace('.txt', '.png'))
+        img2.save(output_path+filename.replace('.txt', '.png'))
 
 
 def list_lines(f):
