@@ -3,11 +3,16 @@ from sys import stdin
 import argparse
 from termcolor import cprint
 import os
+import glob
+import tkinter as tk
 
 POSITION_TEXT = (50, 20)
 OUTPUT_FILE = 'output.txt'
 PARCHMENT_IMG = 'dat/parchment.jpg'
 STYLES_FOLDER = 'dat/styles/'
+FONTS = 'fonts/'
+EXAMPLES = 'examples/'
+MODES = {'normal':1, 'mirror':2}
 
 def uniform_dir_path(directory):
     '''
@@ -29,26 +34,30 @@ def uniform_dir_path(directory):
         return directory+'/'
 
 
-def generate_script(text, max_length, input_path, filename, output_path, style):
+def generate_script():
     '''
     Generate Da Vinci's mirror script
     '''
 
-    global POSITION_TEXT, PARCHMENT_IMG, STYLES_FOLDER, STYLES
+    global POSITION_TEXT, PARCHMENT_IMG, STYLES_FOLDER, STYLES, FONTS, EXAMPLES, MODES
+    global text, max_length, input_path, filename, output_path, mode
 
     print('Generating script...')
     img = Image.open(PARCHMENT_IMG)
     img2 = img.copy()
+    style = lst.curselection()[0]
 
     string_text = '\n'
     for x in text:
         string_text = string_text + x + '\n'
 
-    fnt = ImageFont.truetype(STYLES_FOLDER+STYLES[style], 40)
+    fnt = ImageFont.truetype(STYLES_FOLDER+FONTS+STYLES[style], 40)
     d = ImageDraw.Draw(img2)
     d.text(POSITION_TEXT, string_text, font=fnt, fill=(0, 0, 0))
     
-    img2 = img2.transpose(Image.FLIP_LEFT_RIGHT)
+    if mode.get()==MODES['mirror']:
+        img2 = img2.transpose(Image.FLIP_LEFT_RIGHT)
+
     img2.save(output_path+filename.replace('.txt', '.png'))
     print('Completed creation of script', 'red', end='\n\n')
 
@@ -117,18 +126,25 @@ def get_input(input_file):
 
     return text, max_length
 
+def show_img(e):
+    n = lst.curselection()
+    fname = lst.get(n)
+    img = tk.PhotoImage(file=STYLES_FOLDER+EXAMPLES+fname+'.png')
+    label.config(image=img)
+    label.image = img
+    print(fname)
+
 
 def select_style():
     '''
     Select style from style files in styles folder
     '''
-    
-    global STYLES_FOLDER, STYLES
-    check = True
-    STYLES  = os.listdir(STYLES_FOLDER)
+    global STYLES_FOLDER, STYLES, FONTS, EXAMPLES, MODES, lst, label, mode
+    STYLES  = os.listdir(STYLES_FOLDER+FONTS)
     STYLES.sort()
     files_no_extension = [x[:-4] for x in STYLES]
 
+    '''
     while check:
         try:
             cprint('\nSelect which style you want by inserting the corresponding number', 'red')
@@ -153,6 +169,35 @@ def select_style():
 
     print('')
     return num
+    '''
+    root = tk.Tk()
+    root.geometry("600x500")
+
+    frame1 = tk.Frame(master=root, width=500, height=550)
+    frame1.pack(side=tk.TOP)    
+    lst = tk.Listbox(frame1)
+    lst.pack(side="left", fill=tk.Y, expand=1)
+
+    for fname in files_no_extension:
+        lst.insert(tk.END, fname)
+
+    lst.bind("<<ListboxSelect>>", show_img)
+    img = tk.PhotoImage(file=STYLES_FOLDER+EXAMPLES+files_no_extension[0]+'.png')
+    label = tk.Label(frame1, text="Select which style you want", image=img)
+    label.pack(side="left")
+
+    frame2 = tk.Frame(master=root, width=500, height=50)
+    frame2.pack(side=tk.BOTTOM)  
+    mode = tk.IntVar(root)
+    mode.set(1)
+    normal = tk.Radiobutton(frame2, text = 'normal', variable = mode, value = MODES['normal'])
+    normal.grid(row=0, column=0, padx=10, pady=10)
+    mirror = tk.Radiobutton(frame2, text = 'mirror', variable = mode, value = MODES['mirror'])
+    mirror.grid(row=0, column=1, padx=10, pady=10)
+    button = tk.Button(frame2, text='Select', command=generate_script)
+    button.grid(row=0, column=2, padx=10, pady=10)
+
+    root.mainloop()
 
 
 def args_parser():
@@ -212,13 +257,13 @@ def args_parser():
 
 
 def main():
+    global text, max_length, input_path, filename, output_path
     #Parser of command line arguments
     input_path, output_path, filename = args_parser()    
-    #Select style
-    style = select_style()
     #Take input
     text, max_length = get_input(input_path)
-    generate_script(text, max_length, input_path, filename, output_path, style)
+    #Select style
+    select_style()
 
     print(text)
 
