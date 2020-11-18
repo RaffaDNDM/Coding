@@ -8,7 +8,7 @@ import tkinter as tk
 
 POSITION_TEXT = (50, 20)
 OUTPUT_FILE = 'output.txt'
-PARCHMENT_IMG = 'dat/parchment.jpg'
+PARCHMENT_IMG = 'dat/sheet/parchment.jpg'
 STYLES_FOLDER = 'dat/styles/'
 FONTS = 'fonts/'
 EXAMPLES = 'examples/'
@@ -265,7 +265,7 @@ def main():
     #Select style
     select_style()
 
-    print(text)
+    #print(text)
 
 
 if __name__=='__main__':
