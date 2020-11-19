@@ -7,6 +7,7 @@ import tarfile
 import py7zr
 import progressbar
 from termcolor import cprint
+import colorama
 
 '''
 Parser of command line arguments
@@ -124,6 +125,8 @@ def extraction(input_path, output_path):
 Main function.
 '''
 def main():
+    #Init colored print (otherwise powershell doesn't print colored string)
+    colorama.init()
     #Argument parser
     input_path, output_path = args_parser()
     #Creation of PDF

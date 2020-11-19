@@ -3,7 +3,7 @@ import argparse
 import os
 from PIL import Image
 from termcolor import cprint
-
+import colorama
 
 def uniform_dir_path(directory):
     '''
@@ -51,24 +51,38 @@ def create_pdf(input_path, output_path, subfolder_name, files):
 
     #If recursive, the folder with images is 'path/subfolder_name'
     if subfolder_name!='':
-        path_images = input_path+subfolder_name
+        path_images = input_path+subfolder_name+'/'
 
-    #Create pdf
-    pdf = fpdf.FPDF(unit='pt')
+    #List of tuples, one for each image (img, width, height)
+    imgs_list = []
+    #Find max size
+    max_width = 0
+    max_height = 0
 
-    #Add one image for each page of the PDF
     for img_name in files:
-        pdf.add_page()
-
         with Image.open(path_images+img_name) as img:
             width, height = img.size
-            pdf.image(path_images+img_name, 0, 0, width, height)
+
+            if max_width < width:
+                max_width = width
+            if max_height < height:
+                max_height = height
+
+            imgs_list.append((path_images+img_name, width, height))
+
+    #Create pdf
+    pdf = fpdf.FPDF(unit='pt', format=(max_width, max_height))
+
+    #Add images to pdf
+    for (path, width, height) in imgs_list:
+        pdf.add_page()
+        pdf.image(path, 0, 0, width, height)
 
     #Save the pdf with the name of the folder with images
     if subfolder_name!='':
         pdf.output(output_path+subfolder_name+'.pdf', 'F')
     else:
-        pdf.output(output_path+os.path.basename(input_path)+'.pdf', 'F')        
+        pdf.output(output_path+os.path.basename(input_path[:-1])+'.pdf', 'F')        
 
 
 def convertion(input_path, output_path, recursive, img_format):
@@ -87,7 +101,7 @@ def convertion(input_path, output_path, recursive, img_format):
 
         #For each element of the folder
         for f in subfolders:
-            print(input_path+f)
+            cprint(input_path+f, 'red', attrs=['bold',])
 
             #If the element is a subfolder
             if os.path.isdir(input_path+f):
@@ -120,8 +134,8 @@ def args_parser():
 
     parser.add_argument("-output", "-o", 
                         dest="output", 
-                        help="""Path of the output folder where pdf files will be stored 
-                                (by default path specified in -dir option)""")    
+                        help="""Path of the output folder where pdf files will be
+                                stored (by default path specified in -dir option)""")    
 
     parser.add_argument("-format", "-f", 
                         dest="format", 
@@ -176,6 +190,8 @@ def main():
     '''
     Main function.
     '''
+    #Init colored print (otherwise powershell doesn't print colored string)
+    colorama.init()
     #Argument parser
     input_path, output_path, recursive, img_format = args_parser()
     #Creation of PDF
