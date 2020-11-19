@@ -172,10 +172,8 @@ def select_style():
     return num
     '''
     root = tk.Tk()
-    root.geometry("600x500")
 
-    frame1 = tk.Frame(master=root, width=500, height=550)
-    frame1.pack(side=tk.TOP)    
+    frame1 = tk.Frame(master=root, width=600, height=500)
     lst = tk.Listbox(frame1)
     lst.pack(side="left", fill=tk.Y, expand=1)
 
@@ -186,9 +184,9 @@ def select_style():
     img = tk.PhotoImage(file=STYLES_FOLDER+EXAMPLES+files_no_extension[0]+'.png')
     label = tk.Label(frame1, text="Select which style you want", image=img)
     label.pack(side="left")
+    frame1.pack()
 
-    frame2 = tk.Frame(master=root, width=500, height=50)
-    frame2.pack(side=tk.BOTTOM)  
+    frame2 = tk.Frame(master=root, width=600, height=100)
     mode = tk.IntVar(root)
     mode.set(1)
     normal = tk.Radiobutton(frame2, text = 'normal', variable = mode, value = MODES['normal'])
@@ -197,6 +195,7 @@ def select_style():
     mirror.grid(row=0, column=1, padx=10, pady=10)
     button = tk.Button(frame2, text='Select', command=generate_script)
     button.grid(row=0, column=2, padx=10, pady=10)
+    frame2.pack()
 
     root.mainloop()
 
