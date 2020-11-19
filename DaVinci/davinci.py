@@ -2,6 +2,7 @@ from PIL import Image, ImageDraw, ImageFont
 from sys import stdin
 import argparse
 from termcolor import cprint
+import colorama
 import os
 import glob
 import tkinter as tk
@@ -258,6 +259,9 @@ def args_parser():
 
 def main():
     global text, max_length, input_path, filename, output_path
+    
+    #Init colored print (otherwise powershell doesn't print colored string)
+    colorama.init()
     #Parser of command line arguments
     input_path, output_path, filename = args_parser()    
     #Take input
