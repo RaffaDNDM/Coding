@@ -54,7 +54,7 @@ def rename(input_path, file_format, recursive):
         for subfolder in subfolders_list:
             files = [x[:-len(file_format)-1] for x in os.listdir(input_path+subfolder) if x.endswith('.'+file_format)]
             #print(files)
-            if len(files) > 100:
+            if len(files) >= 100:
                 for x in files:
                     if int(x) < 100 and len(x) == 2:
                         os.rename(input_path+subfolder+'/'+x+'.'+file_format,
@@ -64,7 +64,7 @@ def rename(input_path, file_format, recursive):
     else:
         files = [x[:-len(file_format)-1] for x in os.listdir(input_path) if x.endswith('.'+file_format)]
 
-        if len(files) > 100:
+        if len(files) >= 100:
             for x in files:
                 if int(x) < 100 and len(x) == 2:
                     os.rename(input_path+'/'+x+'.'+file_format,
