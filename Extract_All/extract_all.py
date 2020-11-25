@@ -98,7 +98,7 @@ def extract_from_dir(input_path, output_path, files):
         extract_file(input_path+'/'+f, output_filename)
 
         #Completed extraction
-        count = count +1
+        count += 1
         #Update progress Bar
         bar.update(int(count/len(files) * 20))
 
