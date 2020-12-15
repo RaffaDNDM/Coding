@@ -33,7 +33,33 @@ class Morse:
               'W' : '.--',
               'X' : '-..-',
               'Y' : '-.--',
-              'Z' : '--..' }
+              'Z' : '--..',
+              '0' : '-----', 
+              '1' : '.----', 
+              '2' : '..---', 
+              '3' : '...--', 
+              '4' : '....-', 
+              '5' : '.....', 
+              '6' : '-....', 
+              '7' : '--...', 
+              '8' : '---..', 
+              '9' : '----.',
+              "'" : '.----.',
+              '"' : '.-..-.',
+              '.' : '.-.-.-',
+              ',' : '--..--',
+              ';' : '-.-.-.',
+              ':' : '---...',
+              '?' : '..--..',
+              '-' : '-....-',
+              '/' : '-..-.',
+              '(' : '-.--.',
+              ')' : '-.--.-',
+              '+' : '.-.-.',
+              '=' : '-...-',
+              '$' : '...-..-',
+              '@' : '.--.-.',
+              '_' : '..--.-'}
 
 
     def __init__(self, volume=0.5, fs = 44100, freq = 440.0):
@@ -68,17 +94,19 @@ class Morse:
     def encode(self, msg):
         if len(msg)>=1:
             msg = msg.upper()
-            encoded_msg = self.encode_character(msg[0])
+            encoded_msg = ''
 
-            if len(msg)>1:
-                for c in msg[1:]:
-                    encoded_char = self.encode_character(c)
+            for c in msg:
+                encoded_char = self.encode_character(c)
 
-                    if encoded_char == ' ':
-                        encoded_msg += encoded_char
-                    else:
-                        encoded_msg += ('|' + encoded_char)
-            
+                if encoded_char == ' ':
+                    encoded_msg = encoded_msg[:-1] + encoded_char
+                else:
+                    encoded_msg += (encoded_char + '|')
+
+            if encoded_msg.endswith('|'):
+                encoded_msg = encoded_msg[:-1]
+
             return encoded_msg
 
         else:
