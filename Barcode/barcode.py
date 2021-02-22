@@ -1,4 +1,5 @@
 from termcolor import colored, cprint
+import csv
 import cv2 as cv
 import numpy as np
 
@@ -91,9 +92,12 @@ class Barcode:
 
         start_width = self.draw_code(img, self.__FIRST_LAST, start_width, True)
 
+        self.add_code_to_barcode(img, code)
+
         cv.imshow('img', img)
         cv.waitKey(0)
         cv.destroyAllWindows()
+        cv.imwrite('result.png', img)
 
     def draw_code(self, img, code, start_width, is_higher):
         if is_higher:
@@ -116,6 +120,39 @@ class Barcode:
 
         return start_width
 
+    def add_code_to_barcode(self, img, code):
+        position = ((self.__HORIZONTAL_QUIET_ZONE)*self.__UNIT_SIZE-15,
+                    (self.__VERTICAL_QUIET_ZONE+self.__BARCODE_HEIGHT+self.__HEIGHT_NUM)*self.__UNIT_SIZE)
+        
+        cv.putText(img,
+                   code[0], 
+                   position,
+                   cv.FONT_HERSHEY_SIMPLEX,
+                   0.7,
+                   (0,0,0),
+                   2)
+
+        position = (self.__HORIZONTAL_QUIET_ZONE*self.__UNIT_SIZE+6,
+                    (self.__VERTICAL_QUIET_ZONE+self.__BARCODE_HEIGHT+self.__HEIGHT_NUM)*self.__UNIT_SIZE)
+
+        cv.putText(img,
+                   code[1:7], 
+                   position,
+                   cv.FONT_HERSHEY_SIMPLEX,
+                   0.7,
+                   (0,0,0),
+                   2)
+
+        position = ((self.__HORIZONTAL_QUIET_ZONE+3+7*6+5)*self.__UNIT_SIZE-2,
+                    (self.__VERTICAL_QUIET_ZONE+self.__BARCODE_HEIGHT+self.__HEIGHT_NUM)*self.__UNIT_SIZE)
+
+        cv.putText(img,
+                   code[7:13], 
+                   position,
+                   cv.FONT_HERSHEY_SIMPLEX,
+                   0.7,
+                   (0,0,0),
+                   2)
 
 def main():
     global LINE
