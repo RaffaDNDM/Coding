@@ -88,7 +88,9 @@ class MandelbrotSet:
 
 
 if __name__=='__main__':
-    m = MandelbrotSet(False)
+    colored = True
+    
+    m = MandelbrotSet(colored)
     m.plot(2000, 2, 30, -2.1, 0.6, -1.4, 1.4)
-    j = JuliaSet(complex(0.2,0.6), False)
+    j = JuliaSet(complex(0.2,0.6), colored)
     j.plot(2000, 4, 30, -2, 2, -2, 2)
