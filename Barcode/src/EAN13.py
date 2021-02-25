@@ -2,10 +2,9 @@ from termcolor import colored, cprint
 import csv
 import cv2 as cv
 import numpy as np
+import utility
 
-LINE = '___________________________________________________'
-
-class Barcode:
+class EAN13:
     __LEFT_ODD_FILE = 'left_odd.csv'
     __LEFT_EVEN_FILE = 'left_odd.csv'
     __RIGHT_FILE = 'right.csv'
@@ -16,7 +15,6 @@ class Barcode:
     #Size of a unit in pixel
     __UNIT_SIZE = 2
     #Size in units
-    __BARCODE_WIDTH = 31.35
     __HORIZONTAL_QUIET_ZONE = 10
     __VERTICAL_QUIET_ZONE = 10
     __BARCODE_HEIGHT = 50
@@ -30,26 +28,28 @@ class Barcode:
     __LEFT_EVEN_CODES = {}
     __RIGHT_CODES = {}
 
-    def __init__(self):
-        with open(self.__LEFT_ODD_FILE, 'r') as f:
+    def __init__(self, dat_folder='../dat/EAN13/'):
+        dat_folder = utility.uniform_dir_path(dat_folder)
+
+        with open(dat_folder+self.__LEFT_ODD_FILE, 'r') as f:
             csv_reader = csv.reader(f, delimiter=',')
 
             for row in csv_reader:
                 self.__LEFT_ODD_CODES[row[0]] = row[1]
 
-        with open(self.__LEFT_EVEN_FILE, 'r') as f:
+        with open(dat_folder+self.__LEFT_EVEN_FILE, 'r') as f:
             csv_reader = csv.reader(f, delimiter=',')
 
             for row in csv_reader:
                 self.__LEFT_EVEN_CODES[row[0]] = row[1]
 
-        with open(self.__RIGHT_FILE, 'r') as f:
+        with open(dat_folder+self.__RIGHT_FILE, 'r') as f:
             csv_reader = csv.reader(f, delimiter=',')
 
             for row in csv_reader:
                 self.__RIGHT_CODES[row[0]] = row[1]
 
-        with open(self.__FIRST_NUM_FILE, 'r') as f:
+        with open(dat_folder+self.__FIRST_NUM_FILE, 'r') as f:
             csv_reader = csv.reader(f, delimiter=',')
 
             for row in csv_reader:
@@ -97,7 +97,7 @@ class Barcode:
         cv.imshow('img', img)
         cv.waitKey(0)
         cv.destroyAllWindows()
-        cv.imwrite('result.png', img)
+        cv.imwrite('../EAN13.png', img)
 
     def draw_code(self, img, code, start_width, is_higher):
         if is_higher:
@@ -153,22 +153,3 @@ class Barcode:
                    0.7,
                    (0,0,0),
                    2)
-
-def main():
-    global LINE
-
-    print('')
-    bar_generator = Barcode()
-    
-    while True:
-        try:
-            cprint(f'Insert the code (CTRL+C to exit)\n{LINE}', 'blue')
-            code = input()
-            cprint(LINE, 'blue')
-            bar_generator.encode(code)
-        except KeyboardInterrupt:
-            cprint('\nExit from program\n', 'red')
-            exit(0)
-
-if __name__=='__main__':
-    main()

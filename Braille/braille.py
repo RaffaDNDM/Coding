@@ -1,6 +1,6 @@
 from termcolor import colored, cprint
 import csv
-
+import colorama
 
 LINE = '___________________________________________________'
 
@@ -55,6 +55,7 @@ class Braille:
 def main():
     global LINE
 
+    colorama.init()
     print('')
     b = Braille()
     

@@ -1,5 +1,6 @@
 from termcolor import colored, cprint
 import csv
+import colorama
 
 LINE = '___________________________________________________'
 
@@ -98,6 +99,7 @@ class TelephoneParser:
 def main():
     global LINE
 
+    colorama.init()
     print('')
     parser = TelephoneParser()
     
