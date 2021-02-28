@@ -3,13 +3,14 @@ import matplotlib.pyplot as plt
 import cv2 as cv
 
 class JuliaSet:
-    def __init__(self, c, sampling_num, val_bound, iter_bound, colored):
-        self.sampling_num = sampling_num
+    def __init__(self, step, val_bound, iter_bound, c, colored):
+        self.step = step
         self.val_bound = val_bound
         self.iter_bound = iter_bound
         self.c = c
         self.colored = colored
-        self.COLORS = [np.random.choice(range(256), size=3) for i in range(self.iter_bound+1)]
+        self.RGB_COLORS = [np.random.choice(range(256), size=3) for i in range(self.iter_bound+1)]
+        self.GRAY_COLORS = [np.array([x,x,x]) for x in np.random.choice(range(256), size=self.iter_bound+1)]
 
     def iter_at_divergence(self, p0):
         '''
@@ -23,27 +24,22 @@ class JuliaSet:
             z = z**2 + self.c
             i+=1
 
-        return self.COLORS[i]
+        if self.colored:
+            return self.RGB_COLORS[i]
+        else:
+            return self.GRAY_COLORS[i]
 
     def plot(self, start_x, end_x, start_y, end_y):
-        img = np.full((self.sampling_num, self.sampling_num, 3),0)
-        x_samples = np.linspace(start_x, end_x, self.sampling_num)
-        y_samples = np.linspace(start_y, end_y, self.sampling_num)
+        x_samples = np.arange(start_x, end_x, self.step)
+        y_samples = np.arange(start_y, end_y, self.step)
+        img = np.full((len(y_samples), len(x_samples), 3),0)
 
-        for i in range(self.sampling_num):
-            for j in range(self.sampling_num):
-                img[j][i] = self.iter_at_divergence(complex(x_samples[i], y_samples[j]))
+        for i in range(len(y_samples)):
+            for j in range(len(x_samples)):
+                img[i][j] = self.iter_at_divergence(complex(x_samples[j], y_samples[i]))
 
         fig = plt.figure('Mandelbrot fractal', figsize=[8,8])
-
-        if self.colored:
-            plt.imshow(img, extent=[start_x,end_x,start_y,end_y])
-        else:
-            plt.imshow(img[:,:,1], 
-                       cmap='gray', 
-                       interpolation='none', 
-                       extent=[start_x,end_x,start_y,end_y])
-        
+        plt.imshow(img, extent=[start_x,end_x,start_y,end_y])
         plt.title('Complex plane')
         plt.xlabel('Real')
         plt.ylabel('Img')
@@ -51,12 +47,13 @@ class JuliaSet:
         fig.savefig('julia_set.png')
 
 class MandelbrotSet:
-    def __init__(self, sampling_num, val_bound, iter_bound, colored=True):
-        self.sampling_num = sampling_num
+    def __init__(self, step, val_bound, iter_bound, colored=True):
+        self.step = step
         self.val_bound = val_bound
         self.iter_bound = iter_bound
         self.colored = colored
-        self.COLORS = [np.random.choice(range(256), size=3) for i in range(self.iter_bound+1)]
+        self.RGB_COLORS = [np.random.choice(range(256), size=3) for i in range(self.iter_bound+1)]
+        self.GRAY_COLORS = [np.array([x,x,x]) for x in np.random.choice(range(256), size=self.iter_bound+1)]
 
     def iter_at_divergence(self, c):
         '''
@@ -70,27 +67,22 @@ class MandelbrotSet:
             z = z**2 + c
             i+=1
 
-        return self.COLORS[i]
+        if self.colored:
+            return self.RGB_COLORS[i]
+        else:
+            return self.GRAY_COLORS[i]
 
     def plot(self, start_x, end_x, start_y, end_y):
-        img = np.full((self.sampling_num, self.sampling_num, 3),0)
-        x_samples = np.linspace(start_x, end_x, self.sampling_num)
-        y_samples = np.linspace(start_y, end_y, self.sampling_num)
+        x_samples = np.arange(start_x, end_x, self.step)
+        y_samples = np.arange(start_y, end_y, self.step)
+        img = np.full((len(y_samples), len(x_samples), 3),0)
 
-        for i in range(self.sampling_num):
-            for j in range(self.sampling_num):
-                img[j][i] = self.iter_at_divergence(complex(x_samples[i], y_samples[j]))
+        for i in range(len(y_samples)):
+            for j in range(len(x_samples)):
+                img[i][j] = self.iter_at_divergence(complex(x_samples[j], y_samples[i]))
 
         fig = plt.figure('Mandelbrot fractal', figsize=[8,8])
-
-        if self.colored:
-            plt.imshow(img, extent=[start_x,end_x,start_y,end_y])
-        else:
-            plt.imshow(img[:,:,1], 
-                       cmap='gray', 
-                       interpolation='none', 
-                       extent=[start_x,end_x,start_y,end_y])
-        
+        plt.imshow(img, extent=[start_x,end_x,start_y,end_y])
         plt.title('Complex plane')
         plt.xlabel('Real')
         plt.ylabel('Img')
@@ -99,10 +91,10 @@ class MandelbrotSet:
 
 
 if __name__=='__main__':
-    colored = False
+    colored = True
     
-    m = MandelbrotSet(2000, 3, 40, colored)
+    m = MandelbrotSet(1e-3, 3, 40, colored)
     m.plot(-2.1, 0.6, -1.4, 1.4)
     #m.plot(-1.48, -1.42, -0.02, 0.02)
-    j = JuliaSet(complex(0.2,0.6), 2000, 3, 30, colored)
+    j = JuliaSet(1e-3, 3, 30, complex(0.2,0.6), colored)
     j.plot(-2, 2, -2, 2)
