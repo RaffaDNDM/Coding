@@ -44,7 +44,7 @@ def check_format_files(path_dir, img_format):
 
 def create_pdf(input_path, output_path, subfolder_name, files):
     '''
-    Creates the pdf file using the images with specified
+    Create the pdf file using the images with specified
     names in files
     '''
     path_images = input_path

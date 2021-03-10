@@ -38,10 +38,11 @@ def args_parser():
     return args.input, output
 
 
-'''
-Extract an archieve looking to its extension
-'''
 def extract_file(input_filename, output_filename):
+    '''
+    Extract an archieve looking to its extension
+    '''
+
     #Archieve from its name
     if input_filename.endswith('.zip'):
         with zipfile.ZipFile(input_filename, 'r') as archieve:
@@ -77,10 +78,11 @@ def extract_file(input_filename, output_filename):
         print(' unkown')
 
 
-'''
-Extract all archieves in the input path with arch_format extension
-'''
 def extract_from_dir(input_path, output_path, files):
+    '''
+    Extract all archieves in the input path with arch_format extension
+    '''
+
     count = 0
     #Progress Bar
     bar = progressbar.ProgressBar(maxval=20, \
@@ -104,13 +106,11 @@ def extract_from_dir(input_path, output_path, files):
 
     bar.finish()
 
-
-
-
-'''
-Extraction of archieves with in input_path to output_path 
-'''
 def extraction(input_path, output_path):
+    '''
+    Extraction of archieves with in input_path to output_path 
+    '''
+
     files = [x for x in os.listdir(input_path) if os.path.isfile(input_path+'/'+x)]
     
     #No existing files in input_path with extension arch_format
@@ -121,9 +121,6 @@ def extraction(input_path, output_path):
     extract_from_dir(input_path, output_path, files)
 
 
-'''
-Main function.
-'''
 def main():
     #Init colored print (otherwise powershell doesn't print colored string)
     colorama.init()
@@ -131,7 +128,6 @@ def main():
     input_path, output_path = args_parser()
     #Creation of PDF
     extraction(input_path, output_path)
-
 
 if __name__=='__main__':
     main()

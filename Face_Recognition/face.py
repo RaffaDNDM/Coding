@@ -6,6 +6,24 @@ import os
 import numpy as np
 
 class FaceRecognition:
+    '''
+    Face recognition implementation.
+
+    Args:
+        real_time (bool): True if real time recognition, False otherwise
+
+    Attributes:
+        TRAIN_FOLDER (str): Path of the folder where there are images for 
+                            non-real time application
+
+        path_img (str): Path of the image
+                        -> NO REAL TIME
+                           in which you want to recognize a person from the set
+                           of recognized faces of the images in TRAIN_FOLDER
+                        -> REAL TIME
+                           with the face you want to recognized in the webcam stream
+    '''
+
     TRAIN_FOLDER = 'dat/'
     #List of encodings (one for each face in the image)
     
@@ -35,6 +53,10 @@ class FaceRecognition:
                 self.TRAIN_LABELS.append(f[:-4])
 
     def recognize(self):
+        '''
+        Face recognition application.
+        '''
+
         #Real time recognition
         if self.real_time:
             webcam = cv.VideoCapture(0)
@@ -47,21 +69,29 @@ class FaceRecognition:
                 if not success:
                     continue
 
+                #Reduce size of each webcam frame
                 small_frame = cv.resize(frame, None, fx=0.5, fy=0.5)
+                #Convert frame from BGR to RGB
                 rgb_small_frame = cv.cvtColor(small_frame, cv.COLOR_BGR2RGB)
+                #Find the location of the face in the image
                 face_locations = face_recognition.face_locations(rgb_small_frame)
+                #Encode the recognized face
                 frame_encodings = face_recognition.face_encodings(rgb_small_frame)
 
                 if frame_encodings:
+                    #Compare the face in the frame with the face in the img specified
                     results = face_recognition.compare_faces(self.TRAIN_ENCODINGS, frame_encodings[0])
                     
                     if results[0]:
+                        #Draw green rectangle with name of person around 
+                        #the face if there is a match
                         if face_locations:
                             top, right, bottom, left = face_locations[0]
                             cv.rectangle(small_frame, (left, top), (right, bottom), (0, 255, 0), 2)
                             cv.rectangle(small_frame, (left, bottom-10), (right, bottom), (0, 255, 0), cv.FILLED)
                             cv.putText(small_frame, self.TRAIN_LABELS, (left+2, bottom-2), cv.FONT_HERSHEY_COMPLEX, 0.2, (0,0,0))
                     else:
+                        #Draw red rectangle around the face if there isn't a match
                         if face_locations:
                             top, right, bottom, left = face_locations[0]
                             cv.rectangle(small_frame, (left, top), (right, bottom), (0, 0, 255), 2)
@@ -101,10 +131,12 @@ class FaceRecognition:
 
             print(colored('\nBEST MATCH: ', 'red'),self.TRAIN_LABELS[max_index])
 
-'''
-Parser of command line arguments
-'''
+
 def args_parser():
+    '''
+    Parser of command line arguments
+    '''
+
     #Parser of command line arguments
     parser = argparse.ArgumentParser()
     

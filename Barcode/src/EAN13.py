@@ -5,6 +5,70 @@ import numpy as np
 import utility
 
 class EAN13:
+    '''
+    EAN13 Barcode generator.
+
+    Args:
+        dat_folder (str): Path of the folder containing the csv files
+                          needed to generate EAN13 barcode
+    
+    Attributes:
+        __LEFT_ODD_FILE (str): Path of the csv file containing the Barcode
+                               encoding for the first 6 digits, after the 
+                               first one, when odd value
+
+        __LEFT_EVEN_FILE (str): Path of the csv file containing the Barcode
+                                encoding for the first 6 digits, after the 
+                                first one, when even value
+
+        __RIGHT_FILE (str): Path of the csv file containing the Barcode
+                               encoding for the last 6 digits
+
+        __FIRST_NUM_FILE (str): Path of the csv file containing the Barcode
+                                encoding for the first 6 digits, after the
+                                first one, in terms of odd and even values
+
+        __FIRST_LAST (str): Encoding of opening and closing Braille bars
+
+        __MIDDLE (str): Encoding of central Braille bars
+
+        __UNIT_SIZE (int): Size of a unit in term of pixels
+
+        __HORIZONTAL_QUIET_ZONE (int): Horizontal quiet zone size in terms
+                                       of number of units
+
+        __VERTICAL_QUIET_ZONE (int): Vertical quiet zone size in terms
+                                     of number of units
+
+        __BARCODE_HEIGHT (int): Height of the barcode bars in terms of 
+                                number of units
+
+        __HEIGHT_NUM (int): Height of the digits, under the barcode, in
+                            terms of number of units
+        
+        __TOTAL_HEIGHT (int): Height of the image, including quiet zones,
+                              in terms of number of pixels
+
+        __TOTAL_WIDTH (int): Width of the image, including quiet zones,
+                             in terms of number of pixels
+
+        __FIRST_NUM_CODES (dict): Barcode scheme for the first 6 digits, 
+                                  after the first one, looking to the
+                                  first digit
+
+        __LEFT_ODD_CODES (dict): Barcode encodings for the digits alphabeth for 
+                                 the first 6 digits, after the first one, when 
+                                 odd values
+
+        __LEFT_EVEN_CODES (dict): Barcode encodings for the digits alphabeth for 
+                                  the first 6 digits, after the first one, when 
+                                  even values
+
+        __RIGHT_CODES (dict): Barcode encodings for the digits alphabeth for 
+                              the last 6 digits
+
+    '''
+    
     __LEFT_ODD_FILE = 'left_odd.csv'
     __LEFT_EVEN_FILE = 'left_odd.csv'
     __RIGHT_FILE = 'right.csv'

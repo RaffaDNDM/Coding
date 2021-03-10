@@ -8,9 +8,21 @@ import matplotlib.pyplot as plt
 LINE = '___________________________________________________'
 
 class Cryptocurrency:
+    '''
+    Display cost of cryptocurrencies over time.
+
+    Attributes:
+        __CRYPTO_FILE (str): Path of the file containing the name of the
+                             most known cryptocurrencies with their codes
+
+        __CRYPTO_CODES (dict): Dictionary of cryptocurrencies and their codes
+
+        CURRENCY (str): Currency code (EUR=euros, USD=US dollars)
+    '''
+   
     __CRYPTO_FILE = 'crypto_list.csv'
     __CRYPTO_CODES = {}
-    CURRENCY = 'EUR' #USD for US dollars
+    CURRENCY = 'EUR'
 
     def __init__(self):
         with open(self.__CRYPTO_FILE, 'r') as f:
@@ -20,6 +32,10 @@ class Cryptocurrency:
                 self.__CRYPTO_CODES[row[0]] = row[1]
 
     def select_crypto(self):
+        '''
+        Select a specific type of cryptocurrency.
+        '''
+        
         global LINE
 
         option = -1
@@ -43,6 +59,10 @@ class Cryptocurrency:
         return option
 
     def plot_crypto(self):
+        '''
+        Plot the values of a cryptocurrency over time.
+        '''
+
         option = self.select_crypto()
         crypto = list(self.__CRYPTO_CODES.values())[option]
         
@@ -55,6 +75,10 @@ class Cryptocurrency:
         mplf.plot(data, type='candle', volume=True, style='yahoo')
 
     def compare_cryptos(self):
+        '''
+        Plot the values of 2 cryptocurrencies over time.
+        '''
+
         option1 = self.select_crypto()
         option2 = option1
         
@@ -79,6 +103,12 @@ class Cryptocurrency:
         plt.show()
         
 def select_option():
+    '''
+    Select the type of plot you want:
+    0) to plot a single cryptocurrency
+    1) to plot the comparison of 2 cryptocurrencies
+    '''
+    
     global LINE
     option = -1
     

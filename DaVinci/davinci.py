@@ -6,6 +6,16 @@ import colorama
 import os
 import glob
 import tkinter as tk
+import platform
+
+TERMINATE = ''
+
+if platform.system() == 'Linux':
+    TERMINATE = 'CTRL+D'
+elif platform.system() == 'Darwin':
+    TERMINATE = 'CTRL+D'
+elif platform.system() == 'Windows':
+    TERMINATE = 'CTRL+Z+CARRIAGE_RETURN'
 
 POSITION_TEXT = (50, 20)
 OUTPUT_FILE = 'output.txt'
@@ -60,7 +70,7 @@ def generate_script():
         img2 = img2.transpose(Image.FLIP_LEFT_RIGHT)
 
     img2.save(output_path+filename.replace('.txt', '.png'))
-    print('Completed creation of script', 'red', end='\n\n')
+    cprint('Completed creation of script', 'red', end='\n\n')
 
 
 def list_lines(f):
@@ -89,6 +99,7 @@ def get_input(input_file):
     Get input in interactive mode or from a file
     '''    
 
+    global TERMINATE
     #List of lines
     text = []
     #Max size of a line
@@ -110,7 +121,7 @@ def get_input(input_file):
         try:
             cprint('Write the input text', 'red', end=' ')
             print('(', end='')
-            cprint('CTRL+D', 'green', end=' ')
+            cprint(TERMINATE, 'green', end=' ')
             print('to stop insertion and generate script)')
             cprint('_________________________________________________________________', 'red')
 
@@ -121,13 +132,16 @@ def get_input(input_file):
         except KeyboardInterrupt:
             cprint('\n[Keyboard Interrupt]', 'blue', end=' ')
             print('The user blocks the input using', end=' ')
-            cprint('CTRL+C', 'green', end='\n')
-            print('[the text will be neglected, use EOF = CTRL+D]', end='\n\n')
+            cprint(TERMINATE, 'green', end='\n')
+            print(f'[the text will be neglected, use EOF = {TERMINATE}]', end='\n\n')
             exit(0)
 
     return text, max_length
 
 def show_img(e):
+    '''
+    Plot image.
+    '''
     n = lst.curselection()
     fname = lst.get(n)
     img = tk.PhotoImage(file=STYLES_FOLDER+EXAMPLES+fname+'.png')
@@ -140,39 +154,13 @@ def select_style():
     '''
     Select style from style files in styles folder
     '''
+
     global STYLES_FOLDER, STYLES, FONTS, EXAMPLES, MODES, lst, label, mode
     STYLES  = os.listdir(STYLES_FOLDER+FONTS)
     STYLES.sort()
     files_no_extension = [x[:-4] for x in STYLES]
 
-    '''
-    while check:
-        try:
-            cprint('\nSelect which style you want by inserting the corresponding number', 'red')
-            cprint('_________________________________________________________________', 'red')
-            count=0
-            for f in files_no_extension:
-                cprint(f'{count})', 'yellow', end=' ')         
-                print(f)
-                count = count + 1
-            
-            cprint('_________________________________________________________________', 'red')
-            num = int(input())
-            
-            if num>=0 and num < len(files_no_extension):
-                check = False
-
-        except ValueError:
-            cprint('[VALUE ERROR]', 'blue', end=' ')
-            print('you must enter an integer')
-        except KeyboardInterrupt:
-            exit(0)
-
-    print('')
-    return num
-    '''
     root = tk.Tk()
-
     frame1 = tk.Frame(master=root, width=600, height=500)
     lst = tk.Listbox(frame1)
     lst.pack(side="left", fill=tk.Y, expand=1)
