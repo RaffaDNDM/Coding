@@ -4,10 +4,30 @@ import sys
 import os
 
 class YoutubeDownloader:
+    '''
+    Downloader of Youtube videos.
+
+    Args:
+        links (list): List of URLs of videos to be downloaded
+
+    Attributes:
+        LINKS (list): List of URLs of videos to be downloaded
+    '''
+
     def __init__(self, links):
-        self.links = links
+        self.LINKS = links
 
     def select_type(self):
+        '''
+        Select type of video to be downloaded
+
+        Returns:
+            choice (int): Option of download selected
+                          0) Only audio
+                          1) Only video
+                          2) Both audio and video
+        '''
+
         while True:
             cprint('Select the type of download you want to perform', 'blue')
             print(colored('0) ', 'green')+'Only audio')
@@ -26,10 +46,20 @@ class YoutubeDownloader:
                 pass
 
     def read_path(self):
+        '''
+        Read the path of the folder where the user wants to store 
+        the downloaded videos (including the name of the file).
+
+        Returns:
+            download_path (str): path of the folders where the user 
+                                 wants to store the downloaded videos
+                                 (including the name of the file)
+        '''
+
         download_path = 'a'
 
         while not os.path.isdir(download_path):        
-            cprint('Select the type of download you want to perform', 'blue')
+            cprint('Select the path where the downloaded video will be', 'blue')
             cprint('_______________________________________________', 'blue')
             download_path = input()
             cprint('_______________________________________________', 'blue')
@@ -37,13 +67,20 @@ class YoutubeDownloader:
         return download_path
 
     def download(self):
+        '''
+            Download the videos related to all the specified links.
+        '''
+
+        #Select the type of download
         choice = self.select_type()
+        #Select the folder where videos will be stored
         download_path = self.read_path()
 
-        for link in self.links:
+        #Dowload all the videos
+        for link in self.LINKS:
             try:            
+                #Youtube object from the link
                 yt = YouTube(link)
-                '''
                 #Title of video
                 print('Title: ', yt.title)
                 #Number of views of video
@@ -54,10 +91,11 @@ class YoutubeDownloader:
                 print('Description: ', yt.description)
                 #Rating
                 print('Ratings: ', yt.rating)    
-                '''
 
                 ys = None
 
+                #Select the best resolution available for the selected
+                #type of download (audio, video, audio+video)
                 if choice == 0:
                     ys = yt.streams.get_highest_resolution()
                 elif choice == 1:
@@ -65,7 +103,9 @@ class YoutubeDownloader:
                 elif choice == 2:
                     ys = yt.streams.filter(only_video=True).get_highest_resolution()
 
+                #Download the video
                 ys.download(download_path)
+
             except Exception as e:  
                 print(e) 
 

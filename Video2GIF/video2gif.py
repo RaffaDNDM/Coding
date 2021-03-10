@@ -3,13 +3,24 @@ import argparse
 from termcolor import cprint
 
 def video2gif(video_path, gif_path='output.gif'):
+    '''
+    Convert video to gif
+
+    Args:
+        video_path (str): Path of the input video file to be converted
+
+        gif_path (str): Path of the output GIF file 
+                        (including the name of the GIF file)
+    '''
+
     video = VideoFileClip(video_path)
     video.write_gif(gif_path)
 
-'''
-Parser of command line arguments
-'''
 def args_parser():
+    '''
+    Parser of command line arguments
+    '''
+
     #Parser of command line arguments
     parser = argparse.ArgumentParser()
     
