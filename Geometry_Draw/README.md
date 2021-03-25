@@ -36,7 +36,6 @@ Output example:<br>
 <img src="examples/circles_donut.PNG" width="400" alt="Circles donut">
 </details>
 It requires several dependencies, that you can install using this bash command:
-
 ```bash
 pip3 install turtle
 ```
