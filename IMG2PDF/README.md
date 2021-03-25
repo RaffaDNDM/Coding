@@ -18,7 +18,11 @@ where <b>../folder</b> is the input folder, <b>-f jpg</b> is used to specify the
 </details>
 It requires several dependencies, that you can install using this bash command:
 ```bash
-pip3 install argparse zipfile progressbar termcolor
+pip3 install argparse Pillow fpdf termcolor colorama
+```
+or<br>
+```bash
+pip3 install -r requirements.txt
 ```
 Type the following bash command for help about the argument parameters:
 ```bash

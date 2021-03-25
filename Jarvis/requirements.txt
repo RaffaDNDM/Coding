@@ -1,0 +1,5 @@
+gTTS 
+speechrecognition 
+playsound
+urllib3
+termcolor
