@@ -94,9 +94,8 @@ def main():
     
     audio = AudioMP3(mp3_folder)
     audio.get_info()  
-    audio.set_artist(artist)
-    audio.set_name(delimiter=' - ')
-    audio.get_info()  
+    #audio.set_artist(artist)
+    #audio.set_name(delimiter=' - ')
     
 if __name__=='__main__':
     main()
