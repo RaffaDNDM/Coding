@@ -1,2 +1,1 @@
-Dockerfile linguist-detectable=false
-makefile linguistic-detectable=false
+Dockerfile makefile linguist-detectable=false
